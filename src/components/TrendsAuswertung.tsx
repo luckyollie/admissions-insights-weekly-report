@@ -198,7 +198,7 @@ export const TrendsAuswertung = () => {
               <p className="text-yellow-800 text-sm">Overall acceptance rate down 2.1% as competition intensifies across all tiers.</p>
             </div>
             <div className="p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
-              <h4 font-semibold text-purple-900 mb-2">Early Decision Impact</h4>
+              <h4 className="font-semibold text-purple-900 mb-2">Early Decision Impact</h4>
               <p className="text-purple-800 text-sm">Early decision applications up 23%, suggesting strategic shift in student behavior.</p>
             </div>
           </div>
