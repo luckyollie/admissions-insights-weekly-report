@@ -37,6 +37,9 @@ export default async function handler(req, res) {
     // Parse the JSON string from the model's response
     const reportData = JSON.parse(reportDataText);
 
+    // Add a timestamp for when the data was fetched
+    reportData.lastFetched = new Date().toISOString();
+
     // Cache the response on Vercel's Edge for 24 hours (86400 seconds)
     res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
     
