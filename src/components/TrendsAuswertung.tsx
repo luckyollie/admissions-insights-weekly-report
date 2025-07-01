@@ -85,7 +85,7 @@ export const TrendsAuswertung = () => {
 
   // Fuzzy search for acceptance rates
   let filteredAcceptanceRates: any[] = [];
-  if (data && data.acceptanceRates) {
+  if (data && Array.isArray(data.acceptanceRates) && data.acceptanceRates.length > 0) {
     const ivyLeagues = [
       "Harvard University",
       "Yale University",
@@ -101,17 +101,21 @@ export const TrendsAuswertung = () => {
         ivyLeagues.some(ivy => item.school.toLowerCase().includes(ivy.toLowerCase()))
       );
     } else {
-      // Fuzzy search using Fuse.js
-      const Fuse = require('fuse.js');
-      const fuse = new Fuse(data.acceptanceRates, {
-        keys: ['school'],
-        threshold: 0.4
-      });
-      const results = fuse.search(acceptanceSearch.trim());
-      filteredAcceptanceRates = results.map((result: any) => result.item);
+      try {
+        const fuse = new Fuse(data.acceptanceRates, {
+          keys: ['school'],
+          threshold: 0.4
+        });
+        const results = fuse.search(acceptanceSearch.trim());
+        filteredAcceptanceRates = results.map((result: any) => result.item);
+      } catch (err) {
+        // Fallback: show nothing if Fuse fails
+        filteredAcceptanceRates = [];
+      }
     }
+  } else {
+    filteredAcceptanceRates = [];
   }
-
 
   useEffect(() => {
     setLoading(true);
