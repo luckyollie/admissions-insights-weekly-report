@@ -86,20 +86,9 @@ export const TrendsAuswertung = () => {
   // Fuzzy search for acceptance rates
   let filteredAcceptanceRates: any[] = [];
   if (data && Array.isArray(data.acceptanceRates) && data.acceptanceRates.length > 0) {
-    const ivyLeagues = [
-      "Harvard University",
-      "Yale University",
-      "Princeton University",
-      "Columbia University",
-      "Brown University",
-      "Dartmouth College",
-      "University of Pennsylvania",
-      "Cornell University"
-    ];
     if (!acceptanceSearch.trim()) {
-      filteredAcceptanceRates = data.acceptanceRates.filter((item: any) =>
-        ivyLeagues.some(ivy => item.school.toLowerCase().includes(ivy.toLowerCase()))
-      );
+      // Show all universities by default
+      filteredAcceptanceRates = data.acceptanceRates;
     } else {
       try {
         const fuse = new Fuse(data.acceptanceRates, {
