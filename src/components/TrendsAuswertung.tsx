@@ -28,27 +28,51 @@ const majorTrends = [
 
 import React, { useEffect, useState } from "react";
 
-// Helper: Extracts bullet points with emojis from trends paragraph
+// Helper: Extracts bullet points with unique, relevant emojis from trends paragraph
 function extractTrendBullets(paragraph: string): string[] {
   if (!paragraph) return [];
+  const emojiMap: { [key: string]: string } = {
+    "growth": "📈",
+    "increase": "📈",
+    "up": "📈",
+    "fafsa": "💰",
+    "financial aid": "💰",
+    "test-optional": "📝",
+    "selective": "🎯",
+    "selectivity": "🎯",
+    "competition": "🏆",
+    "competitive": "🏆",
+    "demographic": "👥",
+    "demographics": "👥",
+    "application volume": "🔢",
+    "volume": "🔢",
+    "record": "⭐",
+    "economic": "💹",
+    "economy": "💹",
+    "deadline": "⏰",
+    "trend": "📊",
+    "policy": "📜",
+    "school": "🏫",
+  };
+  // Order of keys matters for specificity
+  const keys = [
+    "fafsa", "financial aid", "test-optional", "growth", "increase", "up", "selective", "selectivity", "competition", "competitive", "demographic", "demographics", "application volume", "volume", "record", "economic", "economy", "deadline", "trend", "policy", "school"
+  ];
   // Split on period followed by space or end of string
   const rawBullets = paragraph.split(/\.( |$)/).map(s => s.trim()).filter(Boolean);
   return rawBullets.map(line => {
     let emoji = "•";
     const lower = line.toLowerCase();
-    if (lower.includes("growth") || lower.includes("increase") || lower.includes("up")) emoji = "📈";
-    else if (lower.includes("fafsa")) emoji = "💰";
-    else if (lower.includes("selective") || lower.includes("selectivity")) emoji = "🎯";
-    else if (lower.includes("competition") || lower.includes("competitive")) emoji = "🏆";
-    else if (lower.includes("financial aid")) emoji = "💵";
-    else if (lower.includes("demographic")) emoji = "👥";
-    else if (lower.includes("test-optional")) emoji = "📝";
-    else if (lower.includes("application")) emoji = "📄";
-    else if (lower.includes("volume")) emoji = "🔢";
-    else if (lower.includes("record")) emoji = "⭐";
+    for (const key of keys) {
+      if (lower.includes(key)) {
+        emoji = emojiMap[key];
+        break;
+      }
+    }
     return `${emoji} ${line}`;
   });
 }
+
 
 export const TrendsAuswertung = () => {
   const [data, setData] = useState<any>(null);
