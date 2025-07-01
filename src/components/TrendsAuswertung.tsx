@@ -27,6 +27,7 @@ const majorTrends = [
 ];
 
 import React, { useEffect, useState } from "react";
+import Fuse from "fuse.js";
 
 // Helper: Extracts bullet points with unique, relevant emojis from trends paragraph
 function extractTrendBullets(paragraph: string): string[] {
@@ -78,6 +79,39 @@ export const TrendsAuswertung = () => {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Acceptance rates search state
+  const [acceptanceSearch, setAcceptanceSearch] = useState("");
+
+  // Fuzzy search for acceptance rates
+  let filteredAcceptanceRates: any[] = [];
+  if (data && data.acceptanceRates) {
+    const ivyLeagues = [
+      "Harvard University",
+      "Yale University",
+      "Princeton University",
+      "Columbia University",
+      "Brown University",
+      "Dartmouth College",
+      "University of Pennsylvania",
+      "Cornell University"
+    ];
+    if (!acceptanceSearch.trim()) {
+      filteredAcceptanceRates = data.acceptanceRates.filter((item: any) =>
+        ivyLeagues.some(ivy => item.school.toLowerCase().includes(ivy.toLowerCase()))
+      );
+    } else {
+      // Fuzzy search using Fuse.js
+      const Fuse = require('fuse.js');
+      const fuse = new Fuse(data.acceptanceRates, {
+        keys: ['school'],
+        threshold: 0.4
+      });
+      const results = fuse.search(acceptanceSearch.trim());
+      filteredAcceptanceRates = results.map((result: any) => result.item);
+    }
+  }
+
 
   useEffect(() => {
     setLoading(true);
@@ -168,10 +202,19 @@ export const TrendsAuswertung = () => {
             </CardContent>
           </Card>
 
-          {/* Acceptance Rates */}
+          {/* Acceptance Rates with Search */}
           <Card>
             <CardHeader>
-              <CardTitle>Acceptance Rates (Top Schools)</CardTitle>
+              <CardTitle>Acceptance Rates</CardTitle>
+              <div className="mt-2">
+                <input
+                  type="text"
+                  placeholder="Search university (e.g. National University of Singapore)"
+                  className="border border-slate-300 rounded px-3 py-1 w-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+                  value={acceptanceSearch}
+                  onChange={e => setAcceptanceSearch(e.target.value)}
+                />
+              </div>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -183,7 +226,7 @@ export const TrendsAuswertung = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.acceptanceRates && data.acceptanceRates.map((item: any, idx: number) => (
+                    {filteredAcceptanceRates.map((item: any, idx: number) => (
                       <tr key={idx}>
                         <td className="px-2 py-1">{item.school}</td>
                         <td className="px-2 py-1">{item.rate}</td>
@@ -191,6 +234,9 @@ export const TrendsAuswertung = () => {
                     ))}
                   </tbody>
                 </table>
+                {filteredAcceptanceRates.length === 0 && (
+                  <div className="text-slate-500 text-sm py-4 text-center">No results found.</div>
+                )}
               </div>
             </CardContent>
           </Card>
