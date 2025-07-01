@@ -17,7 +17,7 @@ export default async function handler(req, res) {
       
       - "keyMetrics" should be an array of objects, each with a "title" (e.g., "Application Growth"), a "value" (e.g., "+12%"), and a "change" (e.g., "increase"). Include 3-4 metrics.
       - "applicationTrends" should be a single paragraph of text (string) summarizing the main trends like test-optional policies and the FAFSA situation.
-      - "acceptanceRates" should be an array of objects, each with a "school" name and a "rate" string (e.g., "3.59%"). List 5-6 highly selective schools.
+      - "acceptanceRates" should be an array of objects, each with a "school" name and a "rate" string (e.g., "3.59%"). List 8-10 universities from all over the world, including but not limited to: National University of Singapore, University of Oxford, University of Toronto, ETH Zurich, University of Melbourne, Tsinghua University, University of Tokyo, and other globally recognized institutions. Do not limit to US or Ivy League schools.
       - "popularMajors" should be an array of strings, listing the top 5 most popular undergraduate majors.
     `;
 
