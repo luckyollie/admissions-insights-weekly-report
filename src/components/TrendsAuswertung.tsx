@@ -245,17 +245,28 @@ export const TrendsAuswertung = () => {
             </CardContent>
           </Card>
 
-          {/* Popular Majors */}
+          {/* Popular Majors (Top 5, Ranked) */}
           <Card>
             <CardHeader>
-              <CardTitle>Popular Majors</CardTitle>
+              <CardTitle>Top 5 Popular Majors</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-wrap gap-2">
-                {data.popularMajors && data.popularMajors.map((major: string, idx: number) => (
-                  <Badge key={idx} variant="default">{major}</Badge>
-                ))}
-              </div>
+              <ol className="list-decimal pl-6 space-y-2 text-slate-800 text-base">
+                {data.popularMajors && data.popularMajors.slice(0, 5).map((major: string, idx: number) => {
+                  let rankIcon = `${idx + 1}.`;
+                  if (idx === 0) rankIcon = "🥇";
+                  else if (idx === 1) rankIcon = "🥈";
+                  else if (idx === 2) rankIcon = "🥉";
+                  else if (idx === 3) rankIcon = "4.";
+                  else if (idx === 4) rankIcon = "5.";
+                  return (
+                    <li key={idx} className="flex items-center gap-2">
+                      <span className="text-lg">{rankIcon}</span>
+                      <span>{major}</span>
+                    </li>
+                  );
+                })}
+              </ol>
             </CardContent>
           </Card>
         </>
