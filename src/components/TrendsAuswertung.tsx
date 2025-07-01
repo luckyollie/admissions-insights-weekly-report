@@ -28,6 +28,28 @@ const majorTrends = [
 
 import React, { useEffect, useState } from "react";
 
+// Helper: Extracts bullet points with emojis from trends paragraph
+function extractTrendBullets(paragraph: string): string[] {
+  if (!paragraph) return [];
+  // Split on period followed by space or end of string
+  const rawBullets = paragraph.split(/\.( |$)/).map(s => s.trim()).filter(Boolean);
+  return rawBullets.map(line => {
+    let emoji = "•";
+    const lower = line.toLowerCase();
+    if (lower.includes("growth") || lower.includes("increase") || lower.includes("up")) emoji = "📈";
+    else if (lower.includes("fafsa")) emoji = "💰";
+    else if (lower.includes("selective") || lower.includes("selectivity")) emoji = "🎯";
+    else if (lower.includes("competition") || lower.includes("competitive")) emoji = "🏆";
+    else if (lower.includes("financial aid")) emoji = "💵";
+    else if (lower.includes("demographic")) emoji = "👥";
+    else if (lower.includes("test-optional")) emoji = "📝";
+    else if (lower.includes("application")) emoji = "📄";
+    else if (lower.includes("volume")) emoji = "🔢";
+    else if (lower.includes("record")) emoji = "⭐";
+    return `${emoji} ${line}`;
+  });
+}
+
 export const TrendsAuswertung = () => {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -108,13 +130,17 @@ export const TrendsAuswertung = () => {
             ))}
           </div>
 
-          {/* Application Trends (text) */}
+          {/* Application Trends (bulleted, with emojis) */}
           <Card>
             <CardHeader>
               <CardTitle>Application Trends Overview</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-slate-800 text-base">{data.applicationTrends}</p>
+              <ul className="list-disc pl-6 space-y-2 text-slate-800 text-base">
+                {extractTrendBullets(data.applicationTrends).map((item, idx) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ul>
             </CardContent>
           </Card>
 
