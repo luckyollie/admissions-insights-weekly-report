@@ -44,7 +44,7 @@ export const TrendsDashboard: React.FC = () => {
 
   React.useEffect(() => {
     setRssLoading(true);
-    fetch('http://localhost:4000/api/rss-proxy')
+    fetch('/api/rss-proxy')
       .then((res) => {
         if (!res.ok) throw new Error('Failed to fetch RSS feed');
         return res.json();
