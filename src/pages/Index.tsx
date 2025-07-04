@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { TrendsAuswertung } from "@/components/TrendsAuswertung";
+import { TrendsDashboard } from "@/components/TrendsDashboard";
 import { NewsletterGenerator } from "@/components/NewsletterGenerator";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -70,7 +70,7 @@ const Index = () => {
           </TabsList>
 
           <TabsContent value="trends">
-            <TrendsAuswertung />
+            <TrendsDashboard />
           </TabsContent>
 
           <TabsContent value="newsletter">
