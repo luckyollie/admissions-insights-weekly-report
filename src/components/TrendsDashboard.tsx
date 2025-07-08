@@ -45,17 +45,27 @@ export const TrendsDashboard: React.FC = () => {
   React.useEffect(() => {
     const fetchNews = () => {
       setRssLoading(true);
-      fetch('/api/rss-proxy')
+      fetch('http://localhost:3001/api/rss-proxy')
         .then((res) => {
-          if (!res.ok) throw new Error('Failed to fetch RSS feed');
+          if (!res.ok) {
+            console.error('RSS fetch error:', res.status, res.statusText);
+            throw new Error(`Failed to fetch RSS feed: ${res.status} ${res.statusText}`);
+          }
           return res.json();
         })
         .then((data) => {
-          if (data.items) setRssNews(data.items);
+          console.log('RSS data received:', data);
+          if (data.items) {
+            setRssNews(data.items);
+          } else {
+            console.warn('No items array in response:', data);
+            setRssNews([]);
+          }
           setRssLoading(false);
         })
         .catch((err) => {
-          setRssError(err.message);
+          console.error('RSS fetch failed:', err);
+          setRssError(err.message || 'Failed to load news');
           setRssLoading(false);
         });
     };
