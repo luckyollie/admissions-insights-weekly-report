@@ -43,20 +43,25 @@ export const TrendsDashboard: React.FC = () => {
   const [rssError, setRssError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    setRssLoading(true);
-    fetch('/api/rss-proxy')
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to fetch RSS feed');
-        return res.json();
-      })
-      .then((data) => {
-        if (data.items) setRssNews(data.items);
-        setRssLoading(false);
-      })
-      .catch((err) => {
-        setRssError(err.message);
-        setRssLoading(false);
-      });
+    const fetchNews = () => {
+      setRssLoading(true);
+      fetch('/api/rss-proxy')
+        .then((res) => {
+          if (!res.ok) throw new Error('Failed to fetch RSS feed');
+          return res.json();
+        })
+        .then((data) => {
+          if (data.items) setRssNews(data.items);
+          setRssLoading(false);
+        })
+        .catch((err) => {
+          setRssError(err.message);
+          setRssLoading(false);
+        });
+    };
+    fetchNews(); // Initial fetch
+    const interval = setInterval(fetchNews, 24 * 60 * 60 * 1000); // 24 hours
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -87,27 +92,6 @@ export const TrendsDashboard: React.FC = () => {
               {item.contentSnippet && (
                 <div className="text-slate-700 text-sm" dangerouslySetInnerHTML={{ __html: item.contentSnippet }} />
               )}
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-
-      {/* Major News Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-blue-900">
-            <AlertCircle className="w-5 h-5 text-blue-700" /> Major News & Policy Updates
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {news.map((item, idx) => (
-            <div key={idx} className="border-b pb-2 last:border-b-0">
-              <div className="flex items-center justify-between text-xs text-slate-500">
-                <span>{item.date}</span>
-                <span className="font-semibold">{item.source}</span>
-              </div>
-              <div className="font-medium text-slate-900">{item.title}</div>
-              <div className="text-slate-700 text-sm">{item.summary}</div>
             </div>
           ))}
         </CardContent>
